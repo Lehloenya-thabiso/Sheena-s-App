@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Camera, Upload, Download, MapPin, RefreshCw, X, ChevronRight, Plus } from 'lucide-react';
 import { GeoLocationData, ImageState } from './types';
-import { getGeocodingInfo } from './services/geminiService';
 import { drawTaggedImage } from './utils/imageUtils';
 
 const FIXED_LAT = -26.354340;
@@ -18,7 +17,7 @@ const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const updateLocationInfo = useCallback(async () => {
+  const updateLocationInfo = useCallback(() => {
     setIsLoading(true);
     const now = new Date();
     
@@ -32,32 +31,17 @@ const App: React.FC = () => {
     const timestamp = `${day}/${month}/${year} ${hours}:${minutes}`;
     const timezone = `UTC+02:00`;
 
-    try {
-      const details = await getGeocodingInfo(FIXED_LAT, FIXED_LONG);
-      setLocation({
-        latitude: FIXED_LAT,
-        longitude: FIXED_LONG,
-        city: details?.city || 'Lenasia',
-        province: details?.province || 'Gauteng',
-        country: details?.country || 'South Africa',
-        address: details?.full_address || 'Anchorville, , 1827, Gauteng, South Africa',
-        timestamp,
-        timezone
-      });
-    } catch (error) {
-      setLocation({
-        latitude: FIXED_LAT,
-        longitude: FIXED_LONG,
-        city: 'Lenasia',
-        province: 'Gauteng',
-        country: 'South Africa',
-        address: 'Anchorville, , 1827, Gauteng, South Africa',
-        timestamp,
-        timezone
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    setLocation({
+      latitude: FIXED_LAT,
+      longitude: FIXED_LONG,
+      city: 'Lenasia',
+      province: 'Gauteng',
+      country: 'South Africa',
+      address: 'Anchorville, , 1827, Gauteng, South Africa',
+      timestamp,
+      timezone
+    });
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
